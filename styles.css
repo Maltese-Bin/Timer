@@ -1,0 +1,23 @@
+/* 基础布局 */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,PingFangSC,"Microsoft YaHei",sans-serif;color:#222;background:radial-gradient(1200px 800px at 70% -10%,#ffe6ea,#fff)}
+
+.app{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px}
+.header{margin-bottom:8px}
+.header h1{font-size:20px;margin:0;color:#d4386c}
+
+.clock-container{position:relative;width:min(86vmin,720px);height:min(86vmin,720px);display:flex;align-items:center;justify-content:center;margin:8px auto}
+#clockCanvas{width:100%;height:100%;display:block;border-radius:24px}
+
+.time-display{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.75);backdrop-filter:saturate(140%) blur(6px);font-variant-numeric:tabular-nums;letter-spacing:1px;color:#c41d7f;font-weight:600}
+
+.footer{margin-top:10px;color:#8c8c8c;font-size:12px}
+
+/* 响应式微调 */
+@media (max-width:480px){
+  .header h1{font-size:16px}
+  .time-display{bottom:0}
+}
+
+
