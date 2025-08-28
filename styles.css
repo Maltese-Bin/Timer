@@ -1,23 +1,43 @@
 /* 基础布局 */
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,PingFangSC,"Microsoft YaHei",sans-serif;color:#222;background:radial-gradient(1200px 800px at 70% -10%,#ffe6ea,#fff)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,PingFangSC,"Microsoft YaHei",sans-serif;color:#1f1f1f;background:linear-gradient(120deg,#fff1f4,#fff,#e8f7ff);background-size:200% 200%;animation:bg-pan 12s ease-in-out infinite}
+@keyframes bg-pan{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 .app{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px}
 .header{margin-bottom:8px}
-.header h1{font-size:20px;margin:0;color:#d4386c}
+.header h1{font-size:20px;margin:0;color:#d4386c;letter-spacing:.5px;text-shadow:0 1px 0 #fff}
+
+.celebrate{display:flex;align-items:center;gap:10px;margin:6px 0 4px}
+.celebrate button{appearance:none;border:0;outline:none;cursor:pointer;padding:6px 12px;border-radius:10px;background:linear-gradient(135deg,#ff85a1,#ff6b81);color:#fff;font-weight:700;box-shadow:0 6px 16px rgba(255,107,129,.22),0 2px 6px rgba(0,0,0,.06)}
+.celebrate button:hover{filter:brightness(1.05)}
+.celebrate button.ghost{background:transparent;color:#d4386c;border:1px solid rgba(212,56,108,.25);box-shadow:none}
+.celebrate button.ghost:hover{background:rgba(212,56,108,.06)}
+.celebrate .tip{font-size:12px;color:#8c8c8c}
+/* 音乐控制单独一行 */
+.music-controls{display:flex;align-items:center;gap:10px;margin:6px 0 10px}
+.music-controls .note{font-size:12px;color:#8c8c8c}
+/* 音量滑块 */
+.celebrate .vol{display:flex;align-items:center;gap:6px}
+.celebrate .vol input{width:60px;accent-color:#d4386c}
+.celebrate .vol span{font-size:12px;color:#8c8c8c;min-width:32px;display:inline-block;text-align:right}
+
+/* 播放中动画波纹 */
+@keyframes pulse-wave{0%{box-shadow:0 0 0 0 rgba(212,56,108,.35)}70%{box-shadow:0 0 0 10px rgba(212,56,108,0)}100%{box-shadow:0 0 0 0 rgba(212,56,108,0)}}
+.celebrate button.playing{position:relative;background:rgba(212,56,108,.06)}
+.celebrate button.playing::after{content:"";position:absolute;inset:-4px;border-radius:12px;animation:pulse-wave 1.8s ease-out infinite}
 
 .clock-container{position:relative;width:min(86vmin,720px);height:min(86vmin,720px);display:flex;align-items:center;justify-content:center;margin:8px auto}
-#clockCanvas{width:100%;height:100%;display:block;border-radius:24px}
+#clockCanvas{width:100%;height:100%;display:block;border-radius:24px;box-shadow:0 10px 30px rgba(212,56,108,.08),0 2px 10px rgba(0,0,0,.04)}
 
-.time-display{position:absolute;bottom:0;left:50%;transform:translateX(-50%);padding:6px 12px;border-radius:12px;background:rgba(255,255,255,.75);backdrop-filter:saturate(140%) blur(6px);font-variant-numeric:tabular-nums;letter-spacing:1px;color:#c41d7f;font-weight:600}
+.time-display{position:absolute;top:6px;left:50%;transform:translateX(-50%);padding:8px 14px;border-radius:14px;background:rgba(255,255,255,.68);backdrop-filter:saturate(160%) blur(10px);border:1px solid rgba(255,255,255,.7);box-shadow:0 6px 18px rgba(228,54,118,.12),0 1px 3px rgba(0,0,0,.06);font-variant-numeric:tabular-nums;letter-spacing:1px;color:#c41d7f;font-weight:700}
 
 .footer{margin-top:10px;color:#8c8c8c;font-size:12px}
 
 /* 响应式微调 */
 @media (max-width:480px){
   .header h1{font-size:16px}
-  .time-display{bottom:0}
+  .time-display{top:4px;padding:7px 12px;border-radius:12px}
 }
 
 
