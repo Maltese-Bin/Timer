@@ -386,7 +386,7 @@
   }
 
   function drawHands(now) {
-    // 钟表时针与分针（圆形参考），中心取画布中心
+    // 优化指针：带阴影、渐变、尖头与配重
     const hours = now.getHours() % 12;
     const minutes = now.getMinutes();
     const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
@@ -394,28 +394,63 @@
     const minAngle = (minutes + seconds / 60) * (Math.PI * 2 / 60) - Math.PI / 2;
     const hourAngle = (hours + minutes / 60) * (Math.PI * 2 / 12) - Math.PI / 2;
 
-    const baseR = Math.min(width, height) * 0.34; // 分针长度
-    const hourR = baseR * 0.72; // 时针更短
+    const minuteLen = Math.min(width, height) * 0.34;
+    const hourLen = minuteLen * 0.7;
 
-    ctx.save();
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+    function drawHand(angle, length, baseWidth, colorStart, colorEnd, counterWeight = true) {
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(angle);
+      // 阴影
+      ctx.shadowColor = 'rgba(0,0,0,0.18)';
+      ctx.shadowBlur = 6 * dpr;
+      ctx.shadowOffsetY = 2 * dpr;
 
-    // 分针
-    ctx.lineWidth = 4 * dpr;
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(centerX + Math.cos(minAngle) * baseR, centerY + Math.sin(minAngle) * baseR);
-    ctx.stroke();
+      // 渐变
+      const grad = ctx.createLinearGradient(0, 0, length, 0);
+      grad.addColorStop(0, colorStart);
+      grad.addColorStop(1, colorEnd);
+      ctx.fillStyle = grad;
 
-    // 时针
-    ctx.lineWidth = 6 * dpr;
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(centerX + Math.cos(hourAngle) * hourR, centerY + Math.sin(hourAngle) * hourR);
-    ctx.stroke();
+      const tipLen = baseWidth * 1.3;
+      const backLen = Math.max(baseWidth * 1.2, 10 * dpr);
+      const half = baseWidth / 2;
 
-    ctx.restore();
+      // 形状：后端圆角矩形 + 前端三角尖
+      ctx.beginPath();
+      // 后端圆角
+      ctx.moveTo(-backLen, -half);
+      ctx.arcTo(-backLen, half, -backLen + half, half, half);
+      // 侧边到尖端
+      ctx.lineTo(length - tipLen, half);
+      ctx.lineTo(length, 0);
+      ctx.lineTo(length - tipLen, -half);
+      // 返回后端
+      ctx.lineTo(-backLen + half, -half);
+      ctx.arcTo(-backLen, -half, -backLen, half, half);
+      ctx.closePath();
+      ctx.fill();
+
+      // 细描边提升锐利度
+      ctx.lineWidth = Math.max(1, baseWidth * 0.18);
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)';
+      ctx.stroke();
+
+      // 配重（后端小圆）
+      if (counterWeight) {
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
+        ctx.arc(-backLen - half * 0.6, 0, half * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // 分针（纤细、偏粉）
+    drawHand(minAngle, minuteLen, 5.0 * dpr, '#ff7aa0', '#c41d7f', true);
+    // 时针（更粗、偏深）
+    drawHand(hourAngle, hourLen, 7.0 * dpr, '#6b6b6b', '#262626', true);
   }
 
   function drawTime(now) {
